@@ -1,0 +1,92 @@
+name: Attune
+options:
+  minimumXcodeGenVersion: 2.46.0
+  deploymentTarget:
+    macOS: "14.0"
+settings:
+  base:
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    SWIFT_TREAT_WARNINGS_AS_ERRORS: YES
+    CLANG_WARN_DOCUMENTATION_COMMENTS: YES
+    MARKETING_VERSION: 0.1.0
+    CURRENT_PROJECT_VERSION: 1
+targets:
+  Attune:
+    type: application
+    platform: macOS
+    sources:
+      - path: Attune
+        excludes: [Resources]
+    resources:
+      - path: Attune/Resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lucaswyd.Attune
+        PRODUCT_NAME: Attune
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Attune
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.productivity
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_APP_SANDBOX: NO
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_STYLE: Automatic
+  AttuneTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources: [AttuneTests]
+    dependencies:
+      - target: Attune
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lucaswyd.AttuneTests
+        GENERATE_INFOPLIST_FILE: YES
+  AttuneUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    sources: [AttuneUITests]
+    dependencies:
+      - target: Attune
+      - target: AttuneFixture
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lucaswyd.AttuneUITests
+        GENERATE_INFOPLIST_FILE: YES
+  AttuneFixture:
+    type: application
+    platform: macOS
+    sources: [TestSupport/AttuneFixture]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lucaswyd.AttuneFixture
+        PRODUCT_NAME: AttuneFixture
+        GENERATE_INFOPLIST_FILE: YES
+        SKIP_INSTALL: YES
+schemes:
+  Attune:
+    build:
+      targets:
+        Attune: all
+    archive:
+      config: Release
+  Attune-Unit:
+    build:
+      targets:
+        Attune: all
+        AttuneTests: [test]
+    test:
+      gatherCoverageData: true
+      targets:
+        - name: AttuneTests
+          parallelizable: true
+  Attune-UI:
+    build:
+      targets:
+        Attune: all
+        AttuneFixture: [test]
+        AttuneUITests: [test]
+    test:
+      targets:
+        - name: AttuneUITests
+          parallelizable: false
